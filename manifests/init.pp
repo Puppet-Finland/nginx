@@ -26,6 +26,9 @@
 #
 class nginx {
 
+# Rationale for this is explained in init.pp of the sshd module
+if hiera('manage_nginx') != 'false' {
+
     include nginx::install
     include nginx::config
     include nginx::service
@@ -33,4 +36,5 @@ class nginx {
     if tagged(monit) {
         include nginx::monit
     }
+}
 }
