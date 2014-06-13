@@ -5,6 +5,8 @@
 #
 class nginx::monit {
 
+    include nginx::params
+
     monit::fragment { 'nginx.monit':
         modulename => 'nginx',
     }
