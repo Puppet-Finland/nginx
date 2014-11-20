@@ -10,19 +10,20 @@
 #
 # == Examples
 #
-# include webserver
-# include nginx
+#   include webserver
+#   include nginx
 #
 # == Authors
 #
 # Samuli Seppänen <samuli.seppanen@gmail.com>
+#
 # Samuli Seppänen <samuli@openvpn.net>
+#
 # Mikko Vilpponen <vilpponen@protecomp.fi>
 #
 # == License
 #
-# BSD-lisence
-# See file LICENSE for details
+# BSD-license. See file LICENSE for details.
 #
 class nginx {
 
