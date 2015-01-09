@@ -10,6 +10,6 @@ class nginx::service {
     service { 'nginx':
         name => "${::nginx::params::service_name}",
         enable => true,
-        require => Class['nginx::config'],
+        require => Class['nginx::install'],
     }
 }

@@ -25,13 +25,21 @@
 #
 # BSD-license. See file LICENSE for details.
 #
-class nginx {
+class nginx
+(
+    $configure = 'yes'
+)
+{
 
 # Rationale for this is explained in init.pp of the sshd module
 if hiera('manage_nginx', 'true') != 'false' {
 
     include nginx::install
-    include nginx::config
+
+    if $configure == 'yes' {
+        include nginx::config
+    }
+
     include nginx::service
 
     if tagged(monit) {
