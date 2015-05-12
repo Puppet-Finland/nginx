@@ -1,0 +1,14 @@
+{
+  "name": "puppetfinland-nginx",
+  "version": "0.3.1",
+  "author": "Puppet-Finland team",
+  "license": "BSD license",
+  "summary": "Setup nginx",
+  "source": "https://github.com/Puppet-Finland/nginx.git",
+  "project_page": "https://github.com/Puppet-Finland/nginx",
+  "dependencies": [
+    { "name": "puppetfinland/monit", "version_requirement": ">= 0.5.0" },
+    { "name": "puppetfinland/webserver", "version_requirement": ">= 0.5.1" },
+    { "name": "puppetfinland/os", "version_requirement": ">= 0.5.7" }
+  ]
+}

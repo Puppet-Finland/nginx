@@ -3,12 +3,10 @@
 #
 # Install nginx
 #
-class nginx::install {
-
-    include nginx::params
+class nginx::install inherits nginx::params {
 
     package { 'nginx-nginx':
-        name => "${::nginx::params::package_name}",
         ensure => installed,
+        name   => $::nginx::params::package_name,
     }
 }

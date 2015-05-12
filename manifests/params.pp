@@ -5,34 +5,34 @@
 #
 class nginx::params {
 
+    include ::os::params
+
     case $::osfamily {
         'RedHat': {
             $package_name = 'nginx'
             $service_name = 'nginx'
-            $service_command = "/sbin/service $service_name"            
             $pidfile = '/var/run/nginx.pid'
-            $admingroup = 'root'
         }
         'Debian': {
             $package_name = 'nginx'
             $service_name = 'nginx'
-            $service_command = "/usr/sbin/service $service_name" 
             $pidfile = '/var/run/nginx.pid'
-            $admingroup = 'root'
         }
         'FreeBSD': {
-            $package_name = 'nginx'            
-            $service_name = 'nginx'
-            $service_command = "/usr/local/etc/rc.d/$service_name" 
-            $pidfile = '/var/run/nginx.pid'
-            $admingroup = 'wheel'
-        }
-        default: {
             $package_name = 'nginx'
             $service_name = 'nginx'
-            $service_command = "/usr/sbin/service $service_name" 
             $pidfile = '/var/run/nginx.pid'
-            $admingroup = 'root'
         }
+        default: {
+            fail("Unsupported operating system ${::osfamily}")
+        }
+    }
+
+    if str2bool($::has_systemd) {
+        $service_start = "${::os::params::systemctl} start ${service_name}"
+        $service_stop = "${::os::params::systemctl} stop ${service_name}"
+    } else {
+        $service_start = "${::os::params::service_cmd} ${service_name} start"
+        $service_stop = "${::os::params::service_cmd} ${service_name} stop"
     }
 }

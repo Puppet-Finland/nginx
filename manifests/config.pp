@@ -6,6 +6,6 @@
 # Any virtualhost-specific configurations should be done in a (currently 
 # non-existing) define.
 #
-class nginx::config {
+class nginx::config inherits nginx::params {
     # TODO
 }

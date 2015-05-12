@@ -6,7 +6,11 @@
 #
 # == Parameters
 #
-# None at the moment
+# [*manage*]
+#   Manage nginx using Puppet. Valid values are 'yes' (default) and 'no'.
+# [*manage_config*]
+#   Manage nginx configuration using Puppet. Valid values are 'yes' (default) 
+#   and 'no'.
 #
 # == Examples
 #
@@ -27,23 +31,23 @@
 #
 class nginx
 (
-    $configure = 'yes'
+    $manage = 'yes',
+    $manage_config = 'yes'
 )
 {
 
-# Rationale for this is explained in init.pp of the sshd module
-if hiera('manage_nginx', 'true') != 'false' {
+if $manage == 'yes' {
 
-    include nginx::install
+    include ::nginx::install
 
-    if $configure == 'yes' {
-        include nginx::config
+    if $manage_config == 'yes' {
+        include ::nginx::config
     }
 
-    include nginx::service
+    include ::nginx::service
 
     if tagged(monit) {
-        include nginx::monit
+        include ::nginx::monit
     }
 }
 }
