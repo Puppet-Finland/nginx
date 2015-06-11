@@ -17,6 +17,9 @@ class nginx::params {
             $package_name = 'nginx'
             $service_name = 'nginx'
             $pidfile = '/var/run/nginx.pid'
+            $apt_repo_location = 'http://nginx.org/packages/ubuntu'
+            $apt_repo_release = $::lsbdistcodename
+            $apt_repo_repos = 'nginx'
         }
         'FreeBSD': {
             $package_name = 'nginx'
