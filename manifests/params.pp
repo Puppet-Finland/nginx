@@ -10,11 +10,18 @@ class nginx::params {
     case $::osfamily {
         'RedHat': {
             $package_name = 'nginx'
+            $conf_d_dir = '/etc/nginx/conf.d'
+            $default_config = "${conf_d_dir}/default.conf"
             $service_name = 'nginx'
             $pidfile = '/var/run/nginx.pid'
         }
         'Debian': {
             $package_name = 'nginx'
+            # While Debian also has /etc/nginx/sites-enabled, the conf.d 
+            # directory is the standard nginx place to put configuration files 
+            # to.
+            $conf_d_dir = '/etc/nginx/conf.d'
+            $default_config = '/etc/nginx/sites-enabled/default'
             $service_name = 'nginx'
             $pidfile = '/var/run/nginx.pid'
             $apt_repo_location = $::operatingsystem ? {

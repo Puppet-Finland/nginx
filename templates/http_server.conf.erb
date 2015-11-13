@@ -1,0 +1,21 @@
+server {
+
+	listen <%= @listen_port %>;
+
+	listen [::]:<%= @listen_port %> default ipv6only=on;
+
+	# This will filter down to location directives
+	root   <%= @document_root %>;
+
+	# The server_name directive seems to be needed even if we're not hosting 
+	# several domains. If it's not enabled, the browser might get confused 
+	# and direct us to a search engine.
+	server_name  <%= @server_name %>;
+
+	access_log  /var/log/nginx/<%= @server_name %>.access.log;
+
+	location / {
+		autoindex <%= @autoindex %>;
+		allow all;
+	}
+}

@@ -7,19 +7,36 @@
 # == Parameters
 #
 # [*manage*]
-#   Manage nginx using Puppet. Valid values are 'yes' (default) and 'no'.
+#   Manage nginx using Puppet. Valid values are true (default) and false.
 # [*manage_config*]
-#   Manage nginx configuration using Puppet. Valid values are 'yes' (default) 
-#   and 'no'.
+#   Manage nginx configuration using Puppet. Valid values are true (default) 
+#   and false.
+# [*purge_default_config*]
+#   Whether to purge the default configuration file or not. Valid values are 
+#   true and false (default). The default server directive (virtual host in 
+#   Apache speak) is typically pretty useless, pointing to nginx documentation 
+#   under /usr/share/doc or similar. Unless you manage nginx configuration 
+#   manually or in a separate Puppet module, it's probably best to set this 
+#   parameter to true.
 # [*use_nginx_repo*]
 #   Whether to use official nginx software repositories. Valid values are true 
 #   and false (default). If this is set to false then nginx is fetched from the 
 #   operating system's own software repositories.
+# [*http_servers*]
+#   A hash of ::nginx::http_server resources to realize. Leave empty to not 
+#   create any HTTP server configurations in nginx.
+# [*allow_address_ipv4*]
+#   IPv4 addresses/networks from which to allow connections. This parameter can 
+#   be either a string or an array. Defaults to 'anyv4' which means that access 
+#   is allowed from any IPv4 address. Uses the webserver module to do the hard 
+#   lifting.
+# [*allow_address_ipv6*]
+#   As above but for IPv6 addresses. Defaults to 'anyv6', thus allowing access 
+#   from any IPv6 address. Uses the webserver module to do the hard lifting.
 #
 # == Examples
 #
-#   include webserver
-#   include nginx
+#   include ::nginx
 #
 # == Authors
 #
@@ -35,13 +52,20 @@
 #
 class nginx
 (
-    $manage = 'yes',
-    $manage_config = 'yes',
-    $use_nginx_repo = false
+    $manage = true,
+    $manage_config = true,
+    $purge_default_config = false,
+    $use_nginx_repo = false,
+    $allow_address_ipv4 = 'anyv4',
+    $allow_address_ipv6 = 'anyv6',
+    $http_servers = {}
 )
 {
 
-if $manage == 'yes' {
+validate_bool($manage)
+validate_bool($manage_config)
+
+if $manage {
 
     class { '::nginx::repo':
         use_nginx_repo => $use_nginx_repo,
@@ -49,11 +73,21 @@ if $manage == 'yes' {
 
     include ::nginx::install
 
-    if $manage_config == 'yes' {
-        include ::nginx::config
+    if $manage_config {
+        class { '::nginx::config':
+            purge_default_config => $purge_default_config,
+            http_servers         => $http_servers,
+        }
     }
 
     include ::nginx::service
+
+    if tagged('packetfilter') {
+        class { '::webserver::packetfilter':
+            allow_address_ipv4 => $allow_address_ipv4,
+            allow_address_ipv6 => $allow_address_ipv6,
+        }
+    }
 
     if tagged(monit) {
         include ::nginx::monit
