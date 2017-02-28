@@ -9,8 +9,12 @@
 # [*manage*]
 #   Manage nginx using Puppet. Valid values are true (default) and false.
 # [*manage_config*]
-#   Manage nginx configuration using Puppet. Valid values are true (default) 
+#   Manage nginx configuration. Valid values are true (default) 
 #   and false.
+# [*manage_firewall*]
+#   Manage packet filtering rules. Valid values are true (default) and false.
+# [*manage_monit*]
+#   Manage monit rules. Valid values are true (default) and false.
 # [*purge_default_config*]
 #   Whether to purge the default configuration file or not. Valid values are 
 #   true and false (default). The default server directive (virtual host in 
@@ -34,10 +38,6 @@
 #   As above but for IPv6 addresses. Defaults to 'anyv6', thus allowing access 
 #   from any IPv6 address. Uses the webserver module to do the hard lifting.
 #
-# == Examples
-#
-#   include ::nginx
-#
 # == Authors
 #
 # Samuli Seppänen <samuli.seppanen@gmail.com>
@@ -52,18 +52,17 @@
 #
 class nginx
 (
-    $manage = true,
-    $manage_config = true,
-    $purge_default_config = false,
-    $use_nginx_repo = false,
-    $allow_address_ipv4 = 'anyv4',
-    $allow_address_ipv6 = 'anyv6',
-    $http_servers = {}
+    Boolean $manage = true,
+    Boolean $manage_config = true,
+    Boolean $manage_packetfilter = true,
+    Boolean $manage_monit = true,
+            $purge_default_config = false,
+            $use_nginx_repo = false,
+            $allow_address_ipv4 = 'anyv4',
+            $allow_address_ipv6 = 'anyv6',
+    Hash    $http_servers = {}
 )
 {
-
-validate_bool($manage)
-validate_bool($manage_config)
 
 if $manage {
 
@@ -82,14 +81,14 @@ if $manage {
 
     include ::nginx::service
 
-    if tagged('packetfilter') {
+    if $manage_packetfilter {
         class { '::webserver::packetfilter':
             allow_address_ipv4 => $allow_address_ipv4,
             allow_address_ipv6 => $allow_address_ipv6,
         }
     }
 
-    if tagged(monit) {
+    if $manage_monit {
         include ::nginx::monit
     }
 }
