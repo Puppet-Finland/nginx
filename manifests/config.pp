@@ -8,13 +8,10 @@
 #
 class nginx::config
 (
-    $purge_default_config,
-    $http_servers
+    Boolean $purge_default_config,
+    Hash    $http_servers,
 
 ) inherits nginx::params {
-
-    validate_bool($purge_default_config)
-    validate_hash($http_servers)
 
     if $purge_default_config {
         file { $::nginx::params::default_config:
@@ -24,6 +21,6 @@ class nginx::config
         }
     }
 
-    # Create HTTP server entries
+    # Create server entries
     create_resources('nginx::http_server', $http_servers)
 }

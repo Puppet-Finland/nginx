@@ -14,6 +14,7 @@ class nginx::params {
             $default_config = "${conf_d_dir}/default.conf"
             $service_name = 'nginx'
             $pidfile = '/var/run/nginx.pid'
+            $www_group = 'nginx'
         }
         'Debian': {
             $package_name = 'nginx'
@@ -30,11 +31,13 @@ class nginx::params {
             }
             $apt_repo_release = $::lsbdistcodename
             $apt_repo_repos = 'nginx'
+            $www_group = 'www-data'
         }
         'FreeBSD': {
             $package_name = 'nginx'
             $service_name = 'nginx'
             $pidfile = '/var/run/nginx.pid'
+            $www_group = 'www'
         }
         default: {
             fail("Unsupported operating system ${::osfamily}")

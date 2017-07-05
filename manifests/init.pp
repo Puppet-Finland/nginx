@@ -60,7 +60,7 @@ class nginx
             $use_nginx_repo = false,
             $allow_address_ipv4 = 'anyv4',
             $allow_address_ipv6 = 'anyv6',
-    Hash    $http_servers = {}
+    Hash    $http_servers = {},
 )
 {
 
@@ -77,6 +77,10 @@ if $manage {
             purge_default_config => $purge_default_config,
             http_servers         => $http_servers,
         }
+
+        # Create the htpasswd file, if one or more credentials have been defined
+        File <| tag == 'htpasswd' |>
+
     }
 
     include ::nginx::service
