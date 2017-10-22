@@ -11,7 +11,7 @@
 # [*manage_config*]
 #   Manage nginx configuration. Valid values are true (default) 
 #   and false.
-# [*manage_firewall*]
+# [*manage_packetfilter*]
 #   Manage packet filtering rules. Valid values are true (default) and false.
 # [*manage_monit*]
 #   Manage monit rules. Valid values are true (default) and false.
