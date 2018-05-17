@@ -1,28 +1,47 @@
 # nginx
 
-A Puppet module for managing nginx servers.
+A Puppet module for managing nginx servers. Includes optional firewall and monit 
+support.
 
 # Module usage
 
-* [Class: nginx](manifests/init.pp)
+Setup nginx from distribution's repositories and purge the default config file:
 
-# Dependencies
+    class { '::nginx':
+      use_nginx_repo       => false,
+      purge_default_config => true,
+    }
 
-See [metadata.json](metadata.json).
+Setup SSL certificates for nginx (requires [puppetfinland/sslcert](https://github.com/Puppet-Finland/puppet-sslcert)):
 
-# Operating system support
+    include ::sslcert
+    
+    sslcert::set { 'example.org':
+      ensure       => 'present',
+      bundlefile   => 'DigiCertCA.crt',
+      embed_bundle => true,
+    }
 
-This module has been tested on
+Setup a HTTP virtualhost:
 
-* Debian 7
-* Ubuntu 12.04 and 14.04
+    nginx::http_server { 'http-virtualhost':
+      ensure        => 'present',
+      basic_auth    => false,
+      document_root => '/var/www/html',
+      autoindex     => 'on',
+      ssl           => false,
+    }
 
-The following operating systems might work out of the box, but they have not 
-been tested:
+Setup a HTTPS virtualhost:
 
-* CentOS 6 and 7
-* FreeBSD 10
+    nginx::http_server { "https-virtualhost":
+      ensure        => 'present',
+      certname      => 'example.org',
+      ensure        => 'present',
+      basic_auth    => false,
+      document_root => '/var/www/html',
+      autoindex     => 'on',
+      ssl           => true,
+    }
 
-Other *NIX-style operating systems should work with some modifications.
-
-For details see [params.pp](manifests/params.pp).
+For details see [init.pp](manifests/init.pp) and [http_server.pp](manifests/http_server.pp).

@@ -2,7 +2,7 @@
   "name": "puppetfinland-nginx",
   "version": "2.0.0",
   "author": "Puppet-Finland team",
-  "summary": "Setup nginx",
+  "summary": "Setup nginx and optionally firewall and monit",
   "license": "BSD-2-Clause",
   "source": "https://github.com/Puppet-Finland/puppet-nginx.git",
   "project_page": "https://github.com/Puppet-Finland/puppet-nginx",
