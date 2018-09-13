@@ -24,7 +24,10 @@ class nginx::params {
             $conf_d_dir = '/etc/nginx/conf.d'
             $default_config = [ '/etc/nginx/sites-enabled/default', "${conf_d_dir}/default.conf" ]
             $service_name = 'nginx'
-            $pidfile = '/var/run/nginx.pid'
+            $pidfile = $::lsbdistcodename ? {
+                /(trusty)/ => '/var/run/nginx.pid',
+                default    => '/run/nginx.pid',
+            }
             $apt_repo_location = $::operatingsystem ? {
                 'Ubuntu' => 'http://nginx.org/packages/ubuntu',
                 'Debian' => 'http://nginx.org/packages/debian',
