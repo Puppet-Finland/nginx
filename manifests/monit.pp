@@ -5,7 +5,7 @@
 #
 class nginx::monit inherits nginx::params {
 
-    monit::fragment { 'nginx.monit':
+    @monit::fragment { 'nginx.monit':
         basename   => 'nginx',
         modulename => 'nginx',
     }
